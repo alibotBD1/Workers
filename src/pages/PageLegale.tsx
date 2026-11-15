@@ -11,8 +11,12 @@ export default function PageLegale({ type }: { type: "mentions" | "confidentiali
         {mentions ? (
           <>
             <h2 className="mb-3 mt-8 text-xl font-bold">Éditeur</h2>
-            <p>{CONFIG.nom}, application éditée par le groupe {CONFIG.groupe} — à compléter : raison sociale, adresse du siège, numéro de contribuable (NIU), responsable de la publication.</p>
-            <p>Contact : {CONFIG.contact}</p>
+            <p>
+              {CONFIG.nom} ({CONFIG.domaine}) est une application éditée par le groupe {CONFIG.groupe} —{" "}
+              <a className="lien" href={CONFIG.siteGroupe} target="_blank" rel="noopener">melanyne.com</a>.
+            </p>
+            <p>Raison sociale, adresse du siège, numéro de contribuable (NIU) et responsable de la publication : à compléter.</p>
+            <p>Contact : <a className="lien" href={`mailto:${CONFIG.contact}`}>{CONFIG.contact}</a></p>
             <h2 className="mb-3 mt-8 text-xl font-bold">Hébergement</h2>
             <p>Site statique hébergé par GitHub Pages (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis).</p>
             <h2 className="mb-3 mt-8 text-xl font-bold">Offres d'emploi</h2>

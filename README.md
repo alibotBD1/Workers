@@ -34,7 +34,23 @@ Node.js 20 ou plus récent.
 1. Dans le dépôt : **Settings → Pages → Build and deployment → Source : GitHub Actions**.
 2. Poussez sur `main` : le workflow `Déployer sur GitHub Pages` construit et publie le site sur `https://<compte>.github.io/<nom-du-depot>/`.
 
-**Domaine personnalisé** (ex. `workers.cm`) : renseignez-le dans Settings → Pages, puis créez la variable de dépôt `BASE_PATH` = `/` (Settings → Secrets and variables → Actions → Variables).
+### Domaine `workers-melanyne.com`
+
+1. Chez le registrar du domaine, créez ces enregistrements DNS :
+
+   | Type | Nom | Valeur |
+   | --- | --- | --- |
+   | A | `@` | `185.199.108.153` |
+   | A | `@` | `185.199.109.153` |
+   | A | `@` | `185.199.110.153` |
+   | A | `@` | `185.199.111.153` |
+   | CNAME | `www` | `alibotbd1.github.io` |
+
+2. **Settings → Pages → Custom domain** : `workers-melanyne.com`, puis cochez **Enforce HTTPS** quand GitHub le propose.
+3. **Settings → Secrets and variables → Actions → Variables** : `BASE_PATH` = `/` et `SITE_URL` = `https://workers-melanyne.com`.
+4. Relancez le workflow « Déployer sur GitHub Pages ».
+
+Contact et expéditeur : `recrutement@workers-melanyne.com` (modifiable dans `src/lib/config.ts`). Site du groupe : [melanyne.com](https://melanyne.com).
 
 ## Publier une offre (flux recruteur)
 

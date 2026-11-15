@@ -6,7 +6,9 @@ export const CONFIG = {
   slogan: "Le travail qui vous ressemble, partout au Cameroun.",
   depotGithub: (import.meta.env.VITE_GITHUB_REPO as string | undefined) ?? "alibotBD1/workers",
   modeDemo: (import.meta.env.VITE_DEMO ?? "true") !== "false",
-  contact: "contact@votre-domaine.cm",
+  contact: "recrutement@workers-melanyne.com",
+  domaine: "workers-melanyne.com",
+  siteGroupe: "https://melanyne.com",
 };
 
 /** URL d'une nouvelle issue GitHub pré-remplie avec le formulaire « nouvelle offre ». */

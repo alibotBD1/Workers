@@ -42,10 +42,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SLUG: ${{ steps.offre.outputs.slug }}
+          SITE_URL: ${{ vars.SITE_URL }}
         run: |
           OWNER="${GITHUB_REPOSITORY%%/*}"
           REPO="${GITHUB_REPOSITORY##*/}"
-          URL="https://${OWNER,,}.github.io/${REPO}/offres/${SLUG}"
+          BASE="${SITE_URL:-https://${OWNER,,}.github.io/${REPO}}"
+          URL="${BASE%/}/offres/${SLUG}"
           gh issue comment ${{ github.event.issue.number }} --body "✅ Offre publiée ! Elle sera en ligne d'ici quelques minutes : ${URL}"
           gh issue close ${{ github.event.issue.number }} --reason completed
           gh workflow run deploy.yml --ref main

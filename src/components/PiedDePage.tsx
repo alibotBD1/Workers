@@ -14,9 +14,16 @@ export default function PiedDePage() {
           <Logo clair />
           <p className="mt-4 max-w-xs text-creme/65">{CONFIG.slogan}</p>
           <p className="mt-6 text-sm text-creme/50">
-            Une application du groupe {CONFIG.groupe}. <br />
+            Une application du{" "}
+            <a href={CONFIG.siteGroupe} target="_blank" rel="noopener" className="underline decoration-creme/30 underline-offset-4 hover:text-white">
+              groupe {CONFIG.groupe}
+            </a>
+            . <br />
             Fait au Cameroun, pour le Cameroun.
           </p>
+          <a href={`mailto:${CONFIG.contact}`} className="mt-4 inline-block text-sm text-soleil-300 hover:text-soleil-200">
+            {CONFIG.contact}
+          </a>
         </div>
         <div>
           <h3 className="text-sm font-bold uppercase tracking-widest text-soleil-300">Emploi par ville</h3>
@@ -55,7 +62,7 @@ export default function PiedDePage() {
         </div>
       </div>
       <div className="container relative flex flex-col gap-2 border-t border-creme/10 py-6 text-sm text-creme/45 sm:flex-row sm:justify-between">
-        <span>© {new Date().getFullYear()} Groupe {CONFIG.groupe} · Workers v{CONFIG.version}</span>
+        <span>© {new Date().getFullYear()} Groupe {CONFIG.groupe} · {CONFIG.domaine} · v{CONFIG.version}</span>
         <span>Rappel : un recruteur sérieux ne vous demandera jamais d'argent pour un emploi.</span>
       </div>
     </footer>
