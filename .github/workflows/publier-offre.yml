@@ -1,0 +1,51 @@
+name: Publier une offre validée
+
+# Quand un mainteneur ajoute le label « offre-validée » sur une issue créée
+# avec le formulaire « Nouvelle offre », l'offre est convertie en fichier JSON,
+# ajoutée au dépôt, puis le site est redéployé.
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+jobs:
+  publier:
+    if: github.event.label.name == 'offre-validée'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Convertir l'issue en offre
+        id: offre
+        run: node scripts/issue-to-job.mjs
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
+      - name: Enregistrer l'offre
+        env:
+          TITRE: ${{ steps.offre.outputs.titre }}
+          NUMERO: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "melanyne-work-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/offres
+          git commit -m "Nouvelle offre : ${TITRE} (#${NUMERO})"
+          git push
+      - name: Prévenir et fermer l'issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SLUG: ${{ steps.offre.outputs.slug }}
+        run: |
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY##*/}"
+          URL="https://${OWNER,,}.github.io/${REPO}/offres/${SLUG}"
+          gh issue comment ${{ github.event.issue.number }} --body "✅ Offre publiée ! Elle sera en ligne d'ici quelques minutes : ${URL}"
+          gh issue close ${{ github.event.issue.number }} --reason completed
+          gh workflow run deploy.yml --ref main

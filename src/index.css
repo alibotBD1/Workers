@@ -1,0 +1,35 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/bricolage-grotesque";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body { font-feature-settings: "cv11", "ss01"; }
+  h1, h2, h3, h4 { @apply font-display tracking-tight; }
+  ::selection { @apply bg-soleil-300 text-encre; }
+  :focus-visible { @apply outline-none ring-2 ring-soleil-400 ring-offset-2 ring-offset-creme; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition active:scale-[.98] disabled:opacity-50 disabled:pointer-events-none; }
+  .btn-primaire { @apply btn bg-foret-800 text-creme hover:bg-foret-700; }
+  .btn-soleil { @apply btn bg-soleil-400 text-encre hover:bg-soleil-300; }
+  .btn-contour { @apply btn border border-encre/15 bg-white text-encre hover:border-encre/40; }
+  .btn-fantome { @apply btn text-encre/80 hover:bg-encre/5; }
+  .champ { @apply w-full rounded-xl border border-encre/15 bg-white px-4 py-3 text-[15px] placeholder:text-encre/40 transition focus:border-foret-500 focus:outline-none focus:ring-4 focus:ring-foret-500/10; }
+  .etiquette { @apply mb-1.5 block text-sm font-semibold text-encre/80; }
+  .carte { @apply rounded-2xl border border-encre/[.08] bg-white shadow-carte; }
+  .puce { @apply inline-flex items-center gap-1.5 rounded-full bg-encre/[.05] px-2.5 py-1 text-xs font-medium text-encre/75; }
+  .surtitre { @apply text-xs font-bold uppercase tracking-[.18em] text-terre-600; }
+  .lien { @apply font-semibold text-foret-700 underline decoration-foret-300 decoration-2 underline-offset-4 hover:decoration-foret-600; }
+  .conteneur-etroit { @apply mx-auto max-w-3xl px-5; }
+  .prose-mw p { @apply mb-4 leading-relaxed text-encre/80; }
+}
+
+@layer utilities {
+  .texte-equilibre { text-wrap: balance; }
+  .masque-defile { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+}

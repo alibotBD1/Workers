@@ -1,0 +1,92 @@
+name: Nouvelle offre d'emploi
+description: Proposer une offre à publier sur Melanyne Work (relue avant publication)
+title: "[Offre] "
+labels: ["offre"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de publier sur **Melanyne Work** ! Votre annonce sera relue par l'équipe avant sa mise en ligne.
+        ⚠️ Toute offre qui demande de l'argent aux candidats sera refusée.
+  - type: input
+    id: titre
+    attributes:
+      label: Intitulé du poste
+    validations:
+      required: true
+  - type: input
+    id: entreprise
+    attributes:
+      label: Entreprise
+    validations:
+      required: true
+  - type: input
+    id: ville
+    attributes:
+      label: Ville
+      placeholder: Douala, Yaoundé, Bafoussam…
+    validations:
+      required: true
+  - type: input
+    id: contrat
+    attributes:
+      label: Contrat
+      description: CDI, CDD, Stage, Alternance, Freelance ou Intérim
+    validations:
+      required: true
+  - type: input
+    id: niveau
+    attributes:
+      label: Expérience
+      description: Débutant, Confirmé, Senior ou Direction
+  - type: input
+    id: teletravail
+    attributes:
+      label: Mode de travail
+      description: Sur site, Hybride ou Télétravail
+  - type: input
+    id: secteur
+    attributes:
+      label: Secteur
+  - type: input
+    id: salaire_min
+    attributes:
+      label: Salaire brut minimum (FCFA / mois)
+  - type: input
+    id: salaire_max
+    attributes:
+      label: Salaire brut maximum (FCFA / mois)
+  - type: textarea
+    id: resume
+    attributes:
+      label: Résumé du poste
+    validations:
+      required: true
+  - type: textarea
+    id: missions
+    attributes:
+      label: Missions (une par ligne)
+    validations:
+      required: true
+  - type: textarea
+    id: profil
+    attributes:
+      label: Profil recherché (une ligne par critère)
+    validations:
+      required: true
+  - type: input
+    id: competences
+    attributes:
+      label: Compétences (séparées par des virgules)
+  - type: textarea
+    id: avantages
+    attributes:
+      label: Avantages (un par ligne)
+  - type: input
+    id: email
+    attributes:
+      label: E-mail de candidature
+  - type: input
+    id: lien
+    attributes:
+      label: Lien de candidature
