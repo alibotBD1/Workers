@@ -27,7 +27,7 @@ const VIDE = {
 };
 
 export default function Recruteurs() {
-  useSeo("Recruteurs : publiez une offre gratuitement", "Publiez gratuitement vos offres d'emploi sur Melanyne Work et touchez les talents de tout le Cameroun.");
+  useSeo("Recruteurs : publiez une offre gratuitement", "Publiez gratuitement vos offres d'emploi sur Workers et touchez les talents de tout le Cameroun.");
   const [f, setF] = useState(VIDE);
   const set = (k: keyof typeof VIDE) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 

@@ -33,7 +33,7 @@ jobs:
           TITRE: ${{ steps.offre.outputs.titre }}
           NUMERO: ${{ github.event.issue.number }}
         run: |
-          git config user.name "melanyne-work-bot"
+          git config user.name "workers-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/offres
           git commit -m "Nouvelle offre : ${TITRE} (#${NUMERO})"

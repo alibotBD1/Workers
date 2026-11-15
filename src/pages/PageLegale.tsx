@@ -11,7 +11,7 @@ export default function PageLegale({ type }: { type: "mentions" | "confidentiali
         {mentions ? (
           <>
             <h2 className="mb-3 mt-8 text-xl font-bold">Éditeur</h2>
-            <p>{CONFIG.nom} — à compléter : raison sociale, adresse du siège, numéro de contribuable (NIU), responsable de la publication.</p>
+            <p>{CONFIG.nom}, application éditée par le groupe {CONFIG.groupe} — à compléter : raison sociale, adresse du siège, numéro de contribuable (NIU), responsable de la publication.</p>
             <p>Contact : {CONFIG.contact}</p>
             <h2 className="mb-3 mt-8 text-xl font-bold">Hébergement</h2>
             <p>Site statique hébergé par GitHub Pages (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis).</p>

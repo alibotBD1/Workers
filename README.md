@@ -1,4 +1,6 @@
-# Melanyne Work
+# Workers · par Melanyne
+
+> Première release du groupe **Melanyne** — version 1.0.0
 
 **Le job board camerounais.** Offres d'emploi à Douala, Yaoundé et dans les 10 régions : CDI, CDD, stages, alternance, freelance.
 
@@ -30,9 +32,9 @@ Node.js 20 ou plus récent.
 ## Mise en ligne sur GitHub Pages
 
 1. Dans le dépôt : **Settings → Pages → Build and deployment → Source : GitHub Actions**.
-2. Poussez sur `main` : le workflow `Déployer sur GitHub Pages` construit et publie le site sur `https://<compte>.github.io/melanyne-work/`.
+2. Poussez sur `main` : le workflow `Déployer sur GitHub Pages` construit et publie le site sur `https://<compte>.github.io/<nom-du-depot>/`.
 
-**Domaine personnalisé** (ex. `melanyne.work`) : renseignez-le dans Settings → Pages, puis créez la variable de dépôt `BASE_PATH` = `/` (Settings → Secrets and variables → Actions → Variables).
+**Domaine personnalisé** (ex. `workers.cm`) : renseignez-le dans Settings → Pages, puis créez la variable de dépôt `BASE_PATH` = `/` (Settings → Secrets and variables → Actions → Variables).
 
 ## Publier une offre (flux recruteur)
 

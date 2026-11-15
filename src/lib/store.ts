@@ -42,7 +42,7 @@ interface Etat {
   recherches: string[];
 }
 
-const CLE = "melanyne-work:v1";
+const CLE = "workers:v1";
 const VIDE: Etat = { favoris: [], candidatures: [], profil: null, alertes: [], recherches: [] };
 
 function lire(): Etat {

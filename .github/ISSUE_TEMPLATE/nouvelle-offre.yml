@@ -1,12 +1,12 @@
 name: Nouvelle offre d'emploi
-description: Proposer une offre à publier sur Melanyne Work (relue avant publication)
+description: Proposer une offre à publier sur Workers (relue avant publication)
 title: "[Offre] "
 labels: ["offre"]
 body:
   - type: markdown
     attributes:
       value: |
-        Merci de publier sur **Melanyne Work** ! Votre annonce sera relue par l'équipe avant sa mise en ligne.
+        Merci de publier sur **Workers** ! Votre annonce sera relue par l'équipe avant sa mise en ligne.
         ⚠️ Toute offre qui demande de l'argent aux candidats sera refusée.
   - type: input
     id: titre

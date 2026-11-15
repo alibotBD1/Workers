@@ -1,7 +1,7 @@
 {
-  "name": "melanyne-work",
+  "name": "workers",
   "version": "1.0.0",
-  "description": "Melanyne Work — le job board camerounais",
+  "description": "Workers par Melanyne — le job board camerounais",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && node scripts/postbuild.mjs",

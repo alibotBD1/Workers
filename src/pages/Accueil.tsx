@@ -12,6 +12,7 @@ import { compatibilite } from "@/lib/recherche";
 import { useEspace } from "@/lib/store";
 import { fourchette, pluriel } from "@/lib/format";
 import useSeo from "@/lib/useSeo";
+import { CONFIG } from "@/lib/config";
 
 const POPULAIRES = ["Développeur", "Comptable", "Stage", "Infirmier", "Commercial", "Bilingue"];
 
@@ -35,7 +36,7 @@ export default function Accueil() {
           <div className="animate-monte">
             <span className="inline-flex items-center gap-2 rounded-full border border-creme/15 bg-creme/5 px-3 py-1.5 text-sm text-creme/80">
               <span className="h-2 w-2 animate-pulse rounded-full bg-soleil-400" />
-              {pluriel(OFFRES.length, "offre en ligne", "offres en ligne")} · 10 régions
+              Nouveau : Workers {CONFIG.version.replace(/\.0$/, "")} par {CONFIG.groupe} · {pluriel(OFFRES.length, "offre", "offres")}
             </span>
             <h1 className="texte-equilibre mt-6 text-[2.6rem] font-bold leading-[1.02] sm:text-6xl lg:text-[4.4rem]">
               Le job qui vous ressemble, <span className="relative whitespace-nowrap text-soleil-400">de Douala<svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9 C 50 2, 150 2, 198 8" stroke="#fbb924" strokeWidth="4" fill="none" strokeLinecap="round" /></svg></span> à Maroua.
@@ -153,7 +154,7 @@ export default function Accueil() {
             <p className="surtitre">Pensé pour vous</p>
             <h2 className="texte-equilibre mt-2 text-3xl font-bold sm:text-5xl">Moins de recherche, plus d'entretiens.</h2>
             <p className="mt-5 text-lg text-encre/65">
-              Créez votre profil en une minute. Melanyne Work calcule votre compatibilité avec chaque offre, directement dans votre navigateur : vos données restent chez vous.
+              Créez votre profil en une minute. Workers calcule votre compatibilité avec chaque offre, directement dans votre navigateur : vos données restent chez vous.
             </p>
             <Link to="/mon-espace?onglet=profil" className="btn-primaire mt-8">
               <Sparkles className="h-4 w-4" /> {profil ? "Mettre à jour mon profil" : "Créer mon profil"}

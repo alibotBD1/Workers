@@ -40,7 +40,7 @@ export default function Entete() {
       )}
       <header className={`sticky top-0 z-40 transition ${defile ? "border-b border-encre/10 bg-creme/85 backdrop-blur-lg" : "bg-creme"}`}>
         <div className="container flex h-[68px] items-center justify-between gap-4">
-          <Link to="/" aria-label="Melanyne Work, accueil">
+          <Link to="/" aria-label="Workers, accueil">
             <Logo />
           </Link>
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">

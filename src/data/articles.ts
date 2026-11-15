@@ -33,7 +33,7 @@ export const ARTICLES: Article[] = [
       {
         titre: "Adaptez à chaque offre",
         texte: [
-          "Reprenez les mots-clés de l'annonce dans votre CV : si l'offre demande « SYSCOHADA » et « Sage », ces termes doivent apparaître. Sur Melanyne Work, renseignez vos compétences dans votre profil pour voir instantanément votre score de compatibilité avec chaque offre.",
+          "Reprenez les mots-clés de l'annonce dans votre CV : si l'offre demande « SYSCOHADA » et « Sage », ces termes doivent apparaître. Sur Workers, renseignez vos compétences dans votre profil pour voir instantanément votre score de compatibilité avec chaque offre.",
         ],
       },
     ],
@@ -85,7 +85,7 @@ export const ARTICLES: Article[] = [
       {
         titre: "Connaître le marché",
         texte: [
-          "Avant tout entretien, consultez le baromètre des salaires de Melanyne Work : il agrège les fourchettes publiées dans les offres par secteur et par ville. Une même fonction peut être rémunérée très différemment à Douala, à Garoua ou dans une ONG internationale.",
+          "Avant tout entretien, consultez le baromètre des salaires de Workers : il agrège les fourchettes publiées dans les offres par secteur et par ville. Une même fonction peut être rémunérée très différemment à Douala, à Garoua ou dans une ONG internationale.",
         ],
       },
       {
@@ -127,7 +127,7 @@ export const ARTICLES: Article[] = [
       {
         titre: "Que faire ?",
         texte: [
-          "Vérifiez l'existence de l'entreprise, son adresse et son numéro de contribuable. Ne transmettez jamais la copie de vos pièces d'identité avant un entretien réel. Si une annonce vous semble suspecte sur Melanyne Work, signalez-la : nous la retirerons après vérification.",
+          "Vérifiez l'existence de l'entreprise, son adresse et son numéro de contribuable. Ne transmettez jamais la copie de vos pièces d'identité avant un entretien réel. Si une annonce vous semble suspecte sur Workers, signalez-la : nous la retirerons après vérification.",
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const ARTICLES: Article[] = [
       {
         titre: "Le stage comme porte d'entrée",
         texte: [
-          "Beaucoup d'entreprises camerounaises recrutent en priorité leurs anciens stagiaires. Un stage bien réalisé vaut souvent mieux qu'un diplôme supplémentaire. Filtrez les offres « Stage » et « Alternance » sur Melanyne Work et créez une alerte pour ne rien manquer.",
+          "Beaucoup d'entreprises camerounaises recrutent en priorité leurs anciens stagiaires. Un stage bien réalisé vaut souvent mieux qu'un diplôme supplémentaire. Filtrez les offres « Stage » et « Alternance » sur Workers et créez une alerte pour ne rien manquer.",
         ],
       },
       {

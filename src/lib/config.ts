@@ -1,10 +1,12 @@
 // Réglages du site. Modifiables via les variables VITE_* (voir .env.example).
 export const CONFIG = {
-  nom: "Melanyne Work",
+  nom: "Workers",
+  groupe: "Melanyne",
+  version: __APP_VERSION__,
   slogan: "Le travail qui vous ressemble, partout au Cameroun.",
-  depotGithub: (import.meta.env.VITE_GITHUB_REPO as string | undefined) ?? "alibotBD1/melanyne-work",
+  depotGithub: (import.meta.env.VITE_GITHUB_REPO as string | undefined) ?? "alibotBD1/workers",
   modeDemo: (import.meta.env.VITE_DEMO ?? "true") !== "false",
-  contact: "contact@melanyne.work",
+  contact: "contact@votre-domaine.cm",
 };
 
 /** URL d'une nouvelle issue GitHub pré-remplie avec le formulaire « nouvelle offre ». */

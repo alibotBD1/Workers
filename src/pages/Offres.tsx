@@ -22,7 +22,7 @@ export default function Offres() {
   const [tiroir, setTiroir] = useState(false);
 
   const titre = [f.q || "Offres d'emploi", f.ville && `à ${f.ville}`].filter(Boolean).join(" ");
-  useSeo(titre, `${titre} au Cameroun : CDI, CDD, stages et alternance sur Melanyne Work.`);
+  useSeo(titre, `${titre} au Cameroun : CDI, CDD, stages et alternance sur Workers.`);
 
   const resultats = useMemo(() => rechercher(OFFRES, f, profil), [f, profil]);
   const pages = Math.max(1, Math.ceil(resultats.length / PAR_PAGE));

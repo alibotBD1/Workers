@@ -16,7 +16,7 @@ export default function DialogueCandidature({ offre, ouverte, fermer }: { offre:
     if (offre.candidature.url) {
       window.open(offre.candidature.url, "_blank", "noopener");
     } else if (offre.candidature.email && !offre.demo) {
-      const corps = `Bonjour,\n\nJe vous adresse ma candidature pour le poste « ${offre.titre} » publié sur Melanyne Work.\n\n${form.message}\n\nVous trouverez mon CV en pièce jointe.\n\n${form.nom}\n${form.tel}\n${form.email}`;
+      const corps = `Bonjour,\n\nJe vous adresse ma candidature pour le poste « ${offre.titre} » publié sur Workers.\n\n${form.message}\n\nVous trouverez mon CV en pièce jointe.\n\n${form.nom}\n${form.tel}\n${form.email}`;
       window.location.href = `mailto:${offre.candidature.email}?subject=${encodeURIComponent(`Candidature — ${offre.titre}`)}&body=${encodeURIComponent(corps)}`;
     }
     setEnvoye(true);
@@ -76,7 +76,7 @@ export default function DialogueCandidature({ offre, ouverte, fermer }: { offre:
             {offre.candidature.url ? <ExternalLink className="mt-0.5 h-4 w-4 shrink-0" /> : <Mail className="mt-0.5 h-4 w-4 shrink-0" />}
             {offre.candidature.url
               ? "Vous serez redirigé vers le site du recruteur pour joindre votre CV."
-              : "Votre messagerie s'ouvrira avec un message pré-rempli ; vous y joindrez votre CV. Melanyne Work ne stocke aucune donnée sur ses serveurs."}
+              : "Votre messagerie s'ouvrira avec un message pré-rempli ; vous y joindrez votre CV. Workers ne stocke aucune donnée sur ses serveurs."}
           </p>
           <button type="submit" className="btn-primaire w-full !py-3.5">
             Envoyer ma candidature
