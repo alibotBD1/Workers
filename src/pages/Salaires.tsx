@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Info, TrendingUp } from "lucide-react";
-import { OFFRES } from "@/data";
+import { useCatalogue } from "@/data";
 import { NIVEAUX, SECTEURS, VILLES } from "@/data/taxonomie";
 import type { Offre } from "@/data/types";
 import { fcfa, kfcfa, pluriel } from "@/lib/format";
@@ -17,7 +17,8 @@ const mediane = (xs: number[]) => {
 
 export default function Salaires() {
   useSeo("Baromètre des salaires au Cameroun", "Salaires médians par secteur, ville et niveau d'expérience, calculés à partir des offres publiées.");
-  const avecSalaire = OFFRES.filter((o) => o.salaireMin);
+  const { offres: OFFRES } = useCatalogue();
+  const avecSalaire = useMemo(() => OFFRES.filter((o) => o.salaireMin), [OFFRES]);
   const [secteur, setSecteur] = useState("tech");
   const [niveau, setNiveau] = useState("");
   const [montant, setMontant] = useState(500000);

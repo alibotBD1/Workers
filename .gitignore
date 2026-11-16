@@ -8,3 +8,10 @@ dist
 .vscode
 .idea
 .vs
+
+# Clés Firebase et comptes de service : ne jamais committer
+*-service-account*.json
+cle*.json
+functions/node_modules
+.firebase
+firebase-debug.log

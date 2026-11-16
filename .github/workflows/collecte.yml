@@ -1,0 +1,35 @@
+name: Collecte IA des offres
+
+on:
+  schedule:
+    - cron: "17 */6 * * *" # toutes les 6 heures
+  workflow_dispatch:
+    inputs:
+      essai:
+        description: "Essai à blanc (aucune écriture en base)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: collecte
+  cancel-in-progress: false
+
+jobs:
+  collecte:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Collecter
+        run: node scripts/collecte/collecte.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          COLLECTE_MODELE: ${{ vars.COLLECTE_MODELE || 'claude-haiku-5-5' }}
+          DRY_RUN: ${{ inputs.essai && '1' || '0' }}

@@ -1,18 +1,22 @@
 {
   "name": "workers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Workers par Melanyne — le job board camerounais",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && node scripts/postbuild.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "offre:depuis-issue": "node scripts/issue-to-job.mjs"
+    "offre:depuis-issue": "node scripts/issue-to-job.mjs",
+    "test": "node --test scripts/collecte/outils.test.mjs",
+    "collecte": "node scripts/collecte/collecte.mjs",
+    "admin:ajouter": "node scripts/definir-admin.mjs"
   },
   "license": "UNLICENSED",
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "firebase": "^12.19.0",
     "lucide-react": "^1.73.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -24,6 +28,7 @@
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.6.2",
+    "firebase-admin": "^13.10.0",
     "postcss": "^8.5.33",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",

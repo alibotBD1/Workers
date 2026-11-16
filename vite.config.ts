@@ -15,4 +15,17 @@ export default defineConfig({
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   server: { port: 5173 },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Seuls l'app, l'authentification et Firestore vont dans le paquet principal ;
+          // stockage, fonctions et statistiques sont chargés à la demande.
+          if (/node_modules\/(@firebase|firebase)\/(storage|functions|analytics|installations)/.test(id)) return;
+          if (id.includes("node_modules/firebase") || id.includes("node_modules/@firebase")) return "firebase";
+          if (id.includes("node_modules/react") || id.includes("node_modules/scheduler")) return "react";
+        },
+      },
+    },
+  },
 });

@@ -5,7 +5,7 @@ import CarteOffre from "@/components/CarteOffre";
 import Monogramme from "@/components/Monogramme";
 import Motif from "@/components/Motif";
 import AnneauCompat from "@/components/AnneauCompat";
-import { ENTREPRISES, OFFRES, offresDe } from "@/data";
+import { offresDe, useCatalogue } from "@/data";
 import { ARTICLES } from "@/data/articles";
 import { SECTEURS, VILLES } from "@/data/taxonomie";
 import { compatibilite } from "@/lib/recherche";
@@ -19,6 +19,7 @@ const POPULAIRES = ["Développeur", "Comptable", "Stage", "Infirmier", "Commerci
 export default function Accueil() {
   useSeo("");
   const profil = useEspace((e) => e.profil);
+  const { offres: OFFRES, entreprises: ENTREPRISES } = useCatalogue();
   const recentes = OFFRES.slice(0, 6);
   const parVille = VILLES.map((v) => ({ ...v, n: OFFRES.filter((o) => o.ville === v.nom).length })).filter((v) => v.n > 0);
   const parSecteur = SECTEURS.map((s) => ({ ...s, n: OFFRES.filter((o) => o.secteur === s.id).length }));

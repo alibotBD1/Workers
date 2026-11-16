@@ -1,0 +1,42 @@
+name: Firebase production (règles, index, fonctions)
+
+# Règles et index : déployés automatiquement quand ils changent sur main.
+# Cloud Functions (« se connecter en tant que ») : lancement manuel, formule Blaze requise.
+on:
+  push:
+    branches: [main]
+    paths: [firestore.rules, firestore.indexes.json, storage.rules]
+  workflow_dispatch:
+    inputs:
+      cible:
+        description: "Projet"
+        type: choice
+        options: [production, recette]
+        default: production
+      fonctions:
+        description: "Déployer aussi les Cloud Functions"
+        type: boolean
+        default: false
+
+jobs:
+  firebase:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.cible || 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Dépendances des fonctions
+        if: ${{ inputs.fonctions }}
+        run: npm install --prefix functions
+      - name: Déployer
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          CIBLE: ${{ inputs.cible || 'production' }}
+          PARTIES: ${{ inputs.fonctions && 'firestore,storage,functions' || 'firestore,storage' }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/cle.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/cle.json"
+          npx --yes firebase-tools@latest deploy --only "$PARTIES" --project "$CIBLE" --non-interactive
+          rm -f "$RUNNER_TEMP/cle.json"

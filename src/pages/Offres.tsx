@@ -4,7 +4,7 @@ import { BellPlus, Check, ChevronLeft, ChevronRight, SearchX, SlidersHorizontal,
 import BarreRecherche from "@/components/BarreRecherche";
 import CarteOffre from "@/components/CarteOffre";
 import Vide from "@/components/Vide";
-import { OFFRES } from "@/data";
+import { useCatalogue } from "@/data";
 import { CONTRATS, NIVEAUX, SECTEURS, TELETRAVAIL, secteurNom } from "@/data/taxonomie";
 import { FILTRES_VIDES, filtresDepuisUrl, filtresVersUrl, rechercher, type Filtres } from "@/lib/recherche";
 import { actions, useEspace } from "@/lib/store";
@@ -15,6 +15,7 @@ const PAR_PAGE = 20;
 
 export default function Offres() {
   const [sp, setSp] = useSearchParams();
+  const { offres: OFFRES } = useCatalogue();
   const f = useMemo(() => filtresDepuisUrl(sp), [sp]);
   const page = Math.max(1, Number(sp.get("page") ?? 1));
   const profil = useEspace((e) => e.profil);
@@ -24,7 +25,7 @@ export default function Offres() {
   const titre = [f.q || "Offres d'emploi", f.ville && `à ${f.ville}`].filter(Boolean).join(" ");
   useSeo(titre, `${titre} au Cameroun : CDI, CDD, stages et alternance sur Workers.`);
 
-  const resultats = useMemo(() => rechercher(OFFRES, f, profil), [f, profil]);
+  const resultats = useMemo(() => rechercher(OFFRES, f, profil), [OFFRES, f, profil]);
   const pages = Math.max(1, Math.ceil(resultats.length / PAR_PAGE));
   const visibles = resultats.slice((page - 1) * PAR_PAGE, page * PAR_PAGE);
 
