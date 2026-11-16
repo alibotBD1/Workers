@@ -1,9 +1,12 @@
 import { useState, type FormEvent, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { firebaseActif } from "@/lib/firebase";
+import { useAuth } from "@/lib/auth";
 import { ArrowRight, BadgeCheck, Eye, Mail, Rocket, ShieldCheck, Wallet } from "lucide-react";
 import Motif from "@/components/Motif";
 import { CONTRATS, NIVEAUX, SECTEURS, TELETRAVAIL, VILLES } from "@/data/taxonomie";
 import { CONFIG, urlNouvelleOffre } from "@/lib/config";
-import { OFFRES } from "@/data";
+import { useCatalogue } from "@/data";
 import { pluriel } from "@/lib/format";
 import useSeo from "@/lib/useSeo";
 
@@ -28,6 +31,9 @@ const VIDE = {
 
 export default function Recruteurs() {
   useSeo("Recruteurs : publiez une offre gratuitement", "Publiez gratuitement vos offres d'emploi sur Workers et touchez les talents de tout le Cameroun.");
+  const { offres: OFFRES } = useCatalogue();
+  const { profil } = useAuth();
+  const cta = profil?.role === "recruteur" ? "/recruteur?onglet=publier" : "/inscription?role=recruteur";
   const [f, setF] = useState(VIDE);
   const set = (k: keyof typeof VIDE) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
@@ -49,7 +55,11 @@ export default function Recruteurs() {
             <p className="text-sm font-bold uppercase tracking-[.18em] text-foret-800">Espace recruteurs</p>
             <h1 className="texte-equilibre mt-3 text-4xl font-bold leading-[1.05] sm:text-6xl">Recrutez les meilleurs talents du Cameroun.</h1>
             <p className="mt-5 max-w-xl text-lg text-encre/75">Publication gratuite, annonces vérifiées, candidats qui postulent directement chez vous. Pas d'intermédiaire, pas d'abonnement.</p>
-            <a href="#publier" className="btn-primaire mt-8 !px-8 !py-4 !text-base">Publier une offre <ArrowRight className="h-5 w-5" /></a>
+            {firebaseActif ? (
+              <Link to={cta} className="btn-primaire mt-8 !px-8 !py-4 !text-base">{profil?.role === "recruteur" ? "Publier une offre" : "Créer mon compte recruteur"} <ArrowRight className="h-5 w-5" /></Link>
+            ) : (
+              <a href="#publier" className="btn-primaire mt-8 !px-8 !py-4 !text-base">Publier une offre <ArrowRight className="h-5 w-5" /></a>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -84,6 +94,17 @@ export default function Recruteurs() {
         </div>
       </section>
 
+      {firebaseActif ? (
+        <section className="container">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] bg-foret-900 p-10 text-creme sm:flex-row sm:items-center">
+            <div>
+              <h2 className="text-3xl font-bold">Votre espace recruteur, gratuit.</h2>
+              <p className="mt-2 text-creme/70">Publiez vos offres, recevez les candidatures avec CV et suivez chaque candidat au même endroit.</p>
+            </div>
+            <Link to={cta} className="btn-soleil !px-8 !py-4 !text-base">{profil?.role === "recruteur" ? "Publier une offre" : "Créer mon compte"} <ArrowRight className="h-5 w-5" /></Link>
+          </div>
+        </section>
+      ) : (
       <section id="publier" className="container scroll-mt-24">
         <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
           <form onSubmit={soumettre} className="carte space-y-8 p-6 sm:p-10">
@@ -139,6 +160,7 @@ export default function Recruteurs() {
           </aside>
         </div>
       </section>
+      )}
     </>
   );
 }

@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "workers-recette",
+    "recette": "workers-recette",
+    "production": "workers-prod"
+  }
+}

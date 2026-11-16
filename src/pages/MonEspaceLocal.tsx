@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { BellRing, BriefcaseBusiness, Heart, Sparkles, Trash2, UserRound, X } from "lucide-react";
 import CarteOffre from "@/components/CarteOffre";
 import Vide from "@/components/Vide";
-import { OFFRES, offreParSlug } from "@/data";
+import { offreParSlug, useCatalogue } from "@/data";
 import { CONTRATS, SECTEURS, VILLES, type Contrat } from "@/data/taxonomie";
 import { actions, STATUTS, useEspace, type Profil, type StatutCandidature } from "@/lib/store";
 import { compatibilite } from "@/lib/recherche";
@@ -25,9 +25,10 @@ const couleurStatut: Record<StatutCandidature, string> = {
   Refusée: "bg-stone-200 text-stone-700",
 };
 
-export default function MonEspace() {
+export default function MonEspaceLocal() {
   useSeo("Mon espace");
   const [sp, setSp] = useSearchParams();
+  const { offres: OFFRES } = useCatalogue();
   const onglet = sp.get("onglet") ?? "candidatures";
   const { favoris, candidatures, alertes, profil } = {
     favoris: useEspace((e) => e.favoris),
@@ -176,6 +177,7 @@ export default function MonEspace() {
 }
 
 function FormulaireProfil({ initial }: { initial: Profil | null }) {
+  const { offres: OFFRES } = useCatalogue();
   const [p, setP] = useState<Profil>(initial ?? { prenom: "", metier: "", ville: "", competences: [], contrats: [], secteurs: [] });
   const [saisie, setSaisie] = useState("");
   const [ok, setOk] = useState(false);

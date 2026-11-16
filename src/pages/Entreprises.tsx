@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Building2, MapPin, Search } from "lucide-react";
-import { ENTREPRISES, offresDe } from "@/data";
+import { offresDe, useCatalogue } from "@/data";
 import { SECTEURS, secteurNom } from "@/data/taxonomie";
 import Monogramme from "@/components/Monogramme";
 import Vide from "@/components/Vide";
@@ -10,6 +10,7 @@ import useSeo from "@/lib/useSeo";
 
 export default function Entreprises() {
   useSeo("Entreprises qui recrutent au Cameroun");
+  const { entreprises: ENTREPRISES } = useCatalogue();
   const [q, setQ] = useState("");
   const [secteur, setSecteur] = useState("");
   const liste = useMemo(
@@ -17,7 +18,7 @@ export default function Entreprises() {
       ENTREPRISES.filter((e) => (!secteur || e.secteur === secteur) && (!q || e.nom.toLowerCase().includes(q.toLowerCase())))
         .map((e) => ({ e, n: offresDe(e.slug).length }))
         .sort((a, b) => b.n - a.n),
-    [q, secteur],
+    [ENTREPRISES, q, secteur],
   );
   return (
     <div className="container py-12">

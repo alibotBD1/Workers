@@ -1,6 +1,6 @@
 # Workers · par Melanyne
 
-> Première release du groupe **Melanyne** — version 1.0.0
+> Groupe **Melanyne** — version 1.1.0
 
 **Le job board camerounais.** Offres d'emploi à Douala, Yaoundé et dans les 10 régions : CDI, CDD, stages, alternance, freelance.
 
@@ -52,7 +52,59 @@ Node.js 20 ou plus récent.
 
 Contact et expéditeur : `recrutement@workers-melanyne.com` (modifiable dans `src/lib/config.ts`). Site du groupe : [melanyne.com](https://melanyne.com).
 
-## Publier une offre (flux recruteur)
+## Comptes, back office et collecte IA (v1.1)
+
+Sans configuration Firebase, le site fonctionne comme avant, en mode local et sans comptes. Pour activer les comptes :
+
+### 1. Créer les projets Firebase (une fois)
+
+Sur [console.firebase.google.com](https://console.firebase.google.com), créez **deux projets** : `workers-recette` et `workers-prod`. Dans chacun :
+
+1. **Authentication → Sign-in method** : activez *E-mail/Mot de passe* et *Google*. Dans *Settings → Authorized domains*, ajoutez `alibotbd1.github.io` et `workers-melanyne.com`.
+2. **Firestore Database → Créer** : mode production, région **africa-south1 (Johannesburg)**.
+3. **Storage → Commencer**.
+4. **Paramètres du projet → Vos applications → Web** : créez une application ; notez la configuration (`apiKey`, `authDomain`…). Activez Google Analytics si vous voulez les statistiques d'audience.
+5. **Paramètres du projet → Comptes de service → Générer une nouvelle clé privée** : un fichier JSON (secret !).
+
+### 2. Configurer GitHub
+
+**Settings → Environments** : créez `production` et `recette`. Dans chacun :
+
+| Type | Nom | Valeur |
+| --- | --- | --- |
+| Variable | `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID` | configuration web du projet |
+| Secret | `FIREBASE_SERVICE_ACCOUNT` | contenu du fichier JSON du compte de service |
+| Secret (production) | `ANTHROPIC_API_KEY` | clé API Claude pour la collecte IA |
+
+### 3. Déployer règles, index et fonctions
+
+**Actions → « Firebase production » → Run workflow** (cible `recette`, puis `production`). Cochez « Cloud Functions » pour la connexion « en tant que » : elle exige la formule **Blaze** (paiement à l'usage) de Firebase.
+
+### 4. Nommer les administrateurs
+
+Créez votre compte sur le site, puis :
+
+```bash
+FIREBASE_SERVICE_ACCOUNT="$(cat cle.json)" npm run admin:ajouter -- vous@melanyne.com
+```
+
+Reconnectez-vous : le lien **Admin** apparaît dans l'en-tête (`/admin`).
+
+### Recette
+
+Créez la branche `recette` : chaque push la déploie sur `https://workers-recette.web.app`, avec ses propres comptes et données de test (bandeau violet). Validez-y les changements, puis fusionnez dans `main` pour la production.
+
+### Collecte IA
+
+Dans le back office, **Collecte IA → Ajouter une source** : page carrières d'un employeur ou flux RSS public. Cochez « conditions vérifiées » seulement si le site autorise la réutilisation de ses offres. Le robot passe toutes les 6 heures (ou via *Actions → Collecte IA → Run workflow*), respecte robots.txt, reformule chaque annonce avec Claude et renvoie vers l'annonce d'origine. Les offres arrivent dans **Offres → À valider**.
+
+Test local sans base : `SOURCES_FICHIER=sources.json DRY_RUN=1 ANTHROPIC_API_KEY=… npm run collecte`.
+
+### Données personnelles
+
+Données collectées, finalités et durées : `src/pages/PageLegale.tsx` (page `/confidentialite`). Avant la mise en production : autorisation préalable de l'Autorité de protection des données à caractère personnel (loi n° 2024/017), y compris pour le stockage hors du Cameroun, et relecture juridique des textes.
+
+## Publier une offre via GitHub (sans comptes)
 
 ```
 Recruteur ──► page /recruteurs ──► issue GitHub pré-remplie (label « offre »)

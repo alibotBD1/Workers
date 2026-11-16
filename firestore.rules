@@ -1,0 +1,81 @@
+rules_version = '2';
+
+// Règles de sécurité Firestore de Workers.
+// Principe : chacun n'accède qu'à ses propres données ; les administrateurs
+// (documents de la collection « admins », créés uniquement par script) voient tout.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function connecte() { return request.auth != null; }
+    function moi(uid) { return connecte() && request.auth.uid == uid; }
+    function estAdmin() {
+      return connecte()
+        && request.auth.token.get('ouvertPar', null) == null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function profil() { return get(/databases/$(database)/documents/utilisateurs/$(request.auth.uid)).data; }
+    function actif() { return connecte() && profil().statut == 'actif'; }
+    function estRecruteur() { return actif() && profil().role == 'recruteur'; }
+    function estCandidat() { return actif() && profil().role == 'candidat'; }
+    function inchange(champs) { return !request.resource.data.diff(resource.data).affectedKeys().hasAny(champs); }
+
+    // ---------------------------------------------------------------- comptes
+    match /utilisateurs/{uid} {
+      allow read: if moi(uid) || estAdmin();
+      allow create: if moi(uid)
+        && request.resource.data.role in ['candidat', 'recruteur']
+        && request.resource.data.statut == 'actif'
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.consentements.cgu is string;
+      // L'utilisateur ne peut changer ni son rôle, ni son statut, ni son e-mail
+      allow update: if (moi(uid) && inchange(['role', 'statut', 'email', 'creeLe'])) || estAdmin();
+      allow delete: if moi(uid) || estAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if moi(uid);
+      allow write: if false; // uniquement via scripts/definir-admin.mjs
+    }
+
+    // ---------------------------------------------------------------- offres
+    match /offres/{id} {
+      allow read: if resource.data.statut == 'publiee'
+        || (connecte() && resource.data.recruteurId == request.auth.uid)
+        || estAdmin();
+      allow create: if estAdmin()
+        || (estRecruteur()
+            && request.resource.data.recruteurId == request.auth.uid
+            && request.resource.data.statut == 'en_attente'
+            && request.resource.data.origine == 'recruteur');
+      // Le recruteur peut seulement clôturer son offre
+      allow update: if estAdmin()
+        || (estRecruteur() && resource.data.recruteurId == request.auth.uid
+            && request.resource.data.statut == 'expiree'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['statut', 'majLe']));
+      allow delete: if estAdmin();
+    }
+
+    // ---------------------------------------------------------------- candidatures
+    match /candidatures/{id} {
+      allow read: if connecte() && (resource.data.candidatId == request.auth.uid || resource.data.recruteurId == request.auth.uid) || estAdmin();
+      allow create: if estCandidat()
+        && request.resource.data.candidatId == request.auth.uid
+        && request.resource.data.statut == 'Envoyée';
+      // Le recruteur ne modifie que le statut
+      allow update: if estAdmin()
+        || (connecte() && resource.data.recruteurId == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['statut']));
+      allow delete: if (connecte() && resource.data.candidatId == request.auth.uid) || estAdmin();
+    }
+
+    // ---------------------------------------------------------------- back office
+    match /paiements/{id} { allow read, write: if estAdmin(); }
+    match /sources/{id} { allow read, write: if estAdmin(); }
+    match /collectes/{id} { allow read: if estAdmin(); allow write: if false; }
+    match /journal/{id} {
+      allow read: if estAdmin();
+      allow create: if estAdmin() && request.resource.data.acteurUid == request.auth.uid;
+      allow update, delete: if false; // journal non modifiable
+    }
+  }
+}

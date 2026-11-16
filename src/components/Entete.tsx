@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Heart, Menu, UserRound, X } from "lucide-react";
+import { Heart, LayoutDashboard, Menu, UserRound, X } from "lucide-react";
 import Logo from "./Logo";
 import { useEspace } from "@/lib/store";
 import { CONFIG } from "@/lib/config";
+import { useAuth } from "@/lib/auth";
+import { firebaseActif } from "@/lib/firebase";
+import BandeauSession from "./BandeauSession";
 
 const LIENS = [
   { to: "/offres", label: "Offres d'emploi" },
@@ -17,6 +20,11 @@ export default function Entete() {
   const [defile, setDefile] = useState(false);
   const favoris = useEspace((e) => e.favoris);
   const { pathname } = useLocation();
+  const { utilisateur, profil, estAdmin } = useAuth();
+  const connecte = Boolean(utilisateur);
+  const lienEspace = profil?.role === "recruteur" ? "/recruteur" : "/mon-espace";
+  const libelleEspace = !firebaseActif ? "Mon espace" : connecte ? (profil?.prenom ?? "Mon espace") : "Connexion";
+  const cibleEspace = !firebaseActif || connecte ? lienEspace : "/connexion";
 
   useEffect(() => {
     setOuvert(false);
@@ -33,6 +41,7 @@ export default function Entete() {
 
   return (
     <>
+      <BandeauSession />
       {CONFIG.modeDemo && (
         <div className="bg-foret-950 px-4 py-1.5 text-center text-xs text-creme/80">
           Version de démonstration : les offres et entreprises affichées sont fictives.
@@ -51,8 +60,13 @@ export default function Entete() {
             ))}
           </nav>
           <div className="hidden items-center gap-2 lg:flex">
-            <Link to="/mon-espace" className="btn-fantome relative">
-              <UserRound className="h-4 w-4" /> Mon espace
+            {estAdmin && (
+              <Link to="/admin" className="btn-fantome" title="Back office">
+                <LayoutDashboard className="h-4 w-4" /> Admin
+              </Link>
+            )}
+            <Link to={cibleEspace} className="btn-fantome relative">
+              <UserRound className="h-4 w-4" /> {libelleEspace}
               {favoris.length > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center gap-0.5 rounded-full bg-terre-500 px-1 text-[10px] font-bold text-white">
                   <Heart className="h-2.5 w-2.5 fill-current" />
@@ -60,9 +74,11 @@ export default function Entete() {
                 </span>
               )}
             </Link>
-            <Link to="/recruteurs" className="btn-soleil">
-              Recruteurs
-            </Link>
+            {profil?.role === "recruteur" ? (
+              <Link to="/recruteur?onglet=publier" className="btn-soleil">Publier une offre</Link>
+            ) : (
+              <Link to="/recruteurs" className="btn-soleil">Recruteurs</Link>
+            )}
           </div>
           <button className="grid h-11 w-11 place-items-center rounded-full hover:bg-encre/5 lg:hidden" onClick={() => setOuvert(!ouvert)} aria-expanded={ouvert} aria-label="Menu">
             {ouvert ? <X /> : <Menu />}
@@ -71,7 +87,7 @@ export default function Entete() {
         {ouvert && (
           <nav className="container animate-monte border-t border-encre/10 pb-6 pt-3 lg:hidden" aria-label="Navigation mobile">
             <div className="flex flex-col">
-              {[...LIENS, { to: "/mon-espace", label: `Mon espace${favoris.length ? ` (${favoris.length} favoris)` : ""}` }].map((l) => (
+              {[...LIENS, { to: cibleEspace, label: `${libelleEspace}${favoris.length ? ` (${favoris.length} favoris)` : ""}` }, ...(estAdmin ? [{ to: "/admin", label: "Back office" }] : [])].map((l) => (
                 <NavLink key={l.to} to={l.to} className={({ isActive }) => `rounded-xl px-3 py-3 text-lg font-medium ${isActive ? "bg-foret-800/[.07] text-foret-800" : ""}`}>
                   {l.label}
                 </NavLink>

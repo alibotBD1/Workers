@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   Banknote,
@@ -16,7 +16,7 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import { entrepriseParSlug, offreParSlug, OFFRES } from "@/data";
+import { entrepriseParSlug, offreParSlug, useCatalogue } from "@/data";
 import { secteurEmoji, secteurNom } from "@/data/taxonomie";
 import Monogramme from "@/components/Monogramme";
 import BoutonFavori from "@/components/BoutonFavori";
@@ -39,10 +39,12 @@ function IconeWhatsApp() {
 
 export default function Offre() {
   const { slug = "" } = useParams();
+  const { offres: OFFRES, chargement } = useCatalogue();
   const offre = offreParSlug(slug);
   const profil = useEspace((e) => e.profil);
   const candidatures = useEspace((e) => e.candidatures);
-  const [dialogue, setDialogue] = useState(false);
+  const [sp] = useSearchParams();
+  const [dialogue, setDialogue] = useState(sp.get("postuler") === "1");
   const [copie, setCopie] = useState(false);
 
   useSeo(offre ? `${offre.titre} — ${offre.entrepriseNom}, ${offre.ville}` : "Offre introuvable", offre?.resume);
@@ -68,6 +70,7 @@ export default function Offre() {
     return () => s.remove();
   }, [offre]);
 
+  if (!offre && chargement) return <div className="container py-24 text-center text-encre/50">Chargement de l'offre…</div>;
   if (!offre) return <Introuvable message="Cette offre n'existe pas ou a expiré." />;
 
   const ent = entrepriseParSlug(offre.entreprise);
@@ -163,6 +166,12 @@ export default function Offre() {
 
       <div className="container grid gap-10 py-10 lg:grid-cols-[1fr_340px]">
         <article className="min-w-0 space-y-10">
+          {offre.origine === "collecte" && offre.source && (
+            <p className="flex flex-wrap items-center gap-2 rounded-2xl bg-sky-50 px-5 py-3 text-sm text-sky-900 ring-1 ring-sky-200">
+              Offre repérée sur <strong>{offre.source.nom}</strong> et résumée par Workers.
+              {offre.source.lienAnnonce && <a href={offre.source.lienAnnonce} target="_blank" rel="noopener noreferrer nofollow" className="font-semibold underline">Voir l'annonce d'origine</a>}
+            </p>
+          )}
           <p className="text-xl leading-relaxed text-encre/80">{offre.resume}</p>
           <Bloc titre="Vos missions" items={offre.missions} puce="◆" couleur="text-foret-600" />
           <Bloc titre="Profil recherché" items={offre.profil} puce="●" couleur="text-terre-500" />
