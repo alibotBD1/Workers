@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
-import { BriefcaseBusiness, Building2, Clock, ExternalLink, FileText, LogOut, Mail, Phone, PlusCircle, ShieldCheck, Users } from "lucide-react";
+import { BriefcaseBusiness, Building2, ExternalLink, LogOut, PlusCircle, ShieldCheck, Sparkles, Users } from "lucide-react";
+import CarteCandidature from "@/components/CarteCandidature";
 import FormulaireOffre, { versChamps } from "@/components/FormulaireOffre";
 import Vide from "@/components/Vide";
 import { Alerte } from "@/components/CarteAuth";
 import { deconnecter, exporterMesDonnees, majConsentementMarketing, majProfil, useAuth, type Utilisateur } from "@/lib/auth";
-import { candidaturesRecues, changerStatutCandidature, cloturerOffre, mesOffres, soumettreOffre, STATUTS_CAND, type CandidatureBase, type StatutCand } from "@/lib/donnees";
+import { candidaturesRecues, cloturerOffre, mesOffres, soumettreOffre, suivreAnalyses, type AnalyseCv, type CandidatureBase } from "@/lib/donnees";
 import { messageErreur } from "@/lib/firebase";
 import { SECTEURS, VILLES } from "@/data/taxonomie";
 import type { Offre } from "@/data/types";
@@ -34,6 +35,14 @@ export default function EspaceRecruteur() {
   const [offres, setOffres] = useState<(Offre & { id: string })[] | null>(null);
   const [cands, setCands] = useState<CandidatureBase[] | null>(null);
   const [filtreOffre, setFiltreOffre] = useState("");
+  const [tri, setTri] = useState<"recent" | "score">("recent");
+  const [filtreReco, setFiltreReco] = useState("");
+  const [analyses, setAnalyses] = useState<Record<string, AnalyseCv>>({});
+  const insight = Boolean(profil?.insight);
+  useEffect(() => {
+    if (!profil || profil.role !== "recruteur" || !profil.insight) return;
+    return suivreAnalyses(profil.uid, setAnalyses);
+  }, [profil]);
 
   const charger = useCallback(() => {
     if (!profil || profil.role !== "recruteur") return;
@@ -55,7 +64,10 @@ export default function EspaceRecruteur() {
 
   const enLigne = offres?.filter((o) => o.statut === "publiee").length ?? 0;
   const nouvelles = cands?.filter((c) => c.statut === "Envoyée").length ?? 0;
-  const candsFiltrees = cands?.filter((c) => !filtreOffre || c.offreSlug === filtreOffre) ?? [];
+  const candsFiltrees = (cands ?? [])
+    .filter((c) => !filtreOffre || c.offreSlug === filtreOffre)
+    .filter((c) => !filtreReco || analyses[c.id]?.recommandation === filtreReco)
+    .sort((a, b) => (tri === "score" ? (analyses[b.id]?.score ?? -1) - (analyses[a.id]?.score ?? -1) : b.creeLe.localeCompare(a.creeLe)));
 
   return (
     <div className="container py-12">
@@ -113,33 +125,37 @@ export default function EspaceRecruteur() {
 
         {onglet === "candidatures" && (
           <div className="space-y-4">
-            {offres && offres.length > 0 && (
-              <select value={filtreOffre} onChange={(e) => setFiltreOffre(e.target.value)} className="champ !w-auto" aria-label="Filtrer par offre">
-                <option value="">Toutes les offres</option>
-                {offres.map((o) => <option key={o.id} value={o.slug}>{o.titre}</option>)}
-              </select>
+            {!insight && (
+              <div className="flex flex-col gap-3 rounded-2xl bg-violet-50 p-5 ring-1 ring-violet-200 sm:flex-row sm:items-center">
+                <Sparkles className="h-6 w-6 shrink-0 text-violet-700" />
+                <p className="flex-1 text-sm text-violet-950"><strong>Nouveau : l'analyse IA des CV.</strong> Chaque CV reçu est lu automatiquement : score d'adéquation, résumé, compétences présentes ou manquantes et questions d'entretien. Les meilleurs profils remontent en haut de la liste.</p>
+                <a href="mailto:recrutement@workers-melanyne.com?subject=Activer%20le%20module%20Insight" className="btn shrink-0 bg-violet-700 text-white hover:bg-violet-800">Activer Insight</a>
+              </div>
             )}
+            <div className="flex flex-wrap gap-2">
+              {offres && offres.length > 0 && (
+                <select value={filtreOffre} onChange={(e) => setFiltreOffre(e.target.value)} className="champ !w-auto" aria-label="Filtrer par offre">
+                  <option value="">Toutes les offres</option>
+                  {offres.map((o) => <option key={o.id} value={o.slug}>{o.titre}</option>)}
+                </select>
+              )}
+              {insight && (
+                <>
+                  <select value={tri} onChange={(e) => setTri(e.target.value as "recent" | "score")} className="champ !w-auto" aria-label="Trier">
+                    <option value="recent">Plus récentes</option>
+                    <option value="score">Meilleur score IA</option>
+                  </select>
+                  <select value={filtreReco} onChange={(e) => setFiltreReco(e.target.value)} className="champ !w-auto" aria-label="Recommandation">
+                    <option value="">Toutes les recommandations</option>
+                    {["À rencontrer", "À étudier", "Peu adapté"].map((r) => <option key={r}>{r}</option>)}
+                  </select>
+                </>
+              )}
+            </div>
             {cands === null ? <p className="text-encre/50">Chargement…</p> : candsFiltrees.length ? (
               <div className="grid gap-4 lg:grid-cols-2">
                 {candsFiltrees.map((c) => (
-                  <div key={c.id} className="carte p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-lg font-semibold">{c.nom}</p>
-                        <p className="text-sm text-encre/55">{c.offreTitre} · <Clock className="inline h-3.5 w-3.5" /> {ilYa(c.creeLe)}</p>
-                      </div>
-                      <select value={c.statut} onChange={async (e) => { const s = e.target.value as StatutCand; await changerStatutCandidature(c.id, s); setCands(cands.map((x) => (x.id === c.id ? { ...x, statut: s } : x))); }}
-                        className="rounded-full border-0 bg-encre/[.05] px-3 py-2 text-sm font-bold" aria-label="Statut">
-                        {STATUTS_CAND.map((s) => <option key={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    {c.message && <p className="mt-3 rounded-xl bg-creme p-3 text-sm text-encre/75">{c.message}</p>}
-                    <div className="mt-4 flex flex-wrap gap-2 text-sm">
-                      <a href={`mailto:${c.email}`} className="btn-contour !py-2"><Mail className="h-4 w-4" /> {c.email}</a>
-                      <a href={`tel:${c.telephone.replace(/\s/g, "")}`} className="btn-contour !py-2"><Phone className="h-4 w-4" /> {c.telephone}</a>
-                      {c.cvUrl && <a href={c.cvUrl} target="_blank" rel="noopener noreferrer" onClick={() => c.statut === "Envoyée" && changerStatutCandidature(c.id, "Vue")} className="btn-primaire !py-2"><FileText className="h-4 w-4" /> Voir le CV</a>}
-                    </div>
-                  </div>
+                  <CarteCandidature key={c.id} c={c} analyse={analyses[c.id]} insight={insight} majStatut={(st) => setCands(cands.map((x) => (x.id === c.id ? { ...x, statut: st } : x)))} />
                 ))}
               </div>
             ) : (

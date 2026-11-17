@@ -1,6 +1,6 @@
 {
   "name": "workers",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Workers par Melanyne — le job board camerounais",
   "scripts": {
     "dev": "vite",
@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "offre:depuis-issue": "node scripts/issue-to-job.mjs",
-    "test": "node --test scripts/collecte/outils.test.mjs",
+    "test": "node --test scripts/collecte/outils.test.mjs functions/insight.test.js",
     "collecte": "node scripts/collecte/collecte.mjs",
     "admin:ajouter": "node scripts/definir-admin.mjs"
   },

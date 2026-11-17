@@ -1,5 +1,14 @@
 # Journal des versions
 
+## 1.2.0 — Module Insight : analyse IA des CV
+
+- Analyse automatique de chaque CV reçu par un recruteur ayant le module Insight (Cloud Function + API Claude)
+- PDF (y compris scannés), photos JPG/PNG et documents Word
+- Score d'adéquation, recommandation (à rencontrer / à étudier / peu adapté), résumé, compétences présentes et manquantes, expérience, diplôme, points forts, points de vigilance, questions d'entretien
+- Tri et filtre des candidatures par score et recommandation dans l'espace recruteur, relance manuelle
+- Activation par recruteur dans le back office, quota quotidien, journal d'audit
+- Garde-fous d'équité (critères professionnels uniquement), décision toujours humaine, information des candidats
+
 ## 1.1.0 — Comptes, back office et collecte IA
 
 - **Comptes candidats et recruteurs** (Firebase) : e-mail ou Google, profil, CV, consentements

@@ -6,10 +6,13 @@
     { "collectionGroup": "offres", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "recruteurId", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "candidatures", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "candidatId", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "candidatures", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "recruteurId", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
+    { "collectionGroup": "analyses", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "recruteurId", "order": "ASCENDING" }, { "fieldPath": "analyseeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "utilisateurs", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "role", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "utilisateurs", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ville", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "utilisateurs", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "consentements.marketing", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
+    { "collectionGroup": "analyses", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "recruteurId", "order": "ASCENDING" }, { "fieldPath": "analyseeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "utilisateurs", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "role", "order": "ASCENDING" }, { "fieldPath": "consentements.marketing", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] },
+    { "collectionGroup": "analyses", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "recruteurId", "order": "ASCENDING" }, { "fieldPath": "analyseeLe", "order": "DESCENDING" }] },
     { "collectionGroup": "utilisateurs", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "role", "order": "ASCENDING" }, { "fieldPath": "ville", "order": "ASCENDING" }, { "fieldPath": "creeLe", "order": "DESCENDING" }] }
   ],
   "fieldOverrides": []

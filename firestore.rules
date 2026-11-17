@@ -28,7 +28,7 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.consentements.cgu is string;
       // L'utilisateur ne peut changer ni son rôle, ni son statut, ni son e-mail
-      allow update: if (moi(uid) && inchange(['role', 'statut', 'email', 'creeLe'])) || estAdmin();
+      allow update: if (moi(uid) && inchange(['role', 'statut', 'email', 'creeLe', 'insight'])) || estAdmin();
       allow delete: if moi(uid) || estAdmin();
     }
 
@@ -66,6 +66,13 @@ service cloud.firestore {
         || (connecte() && resource.data.recruteurId == request.auth.uid
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['statut']));
       allow delete: if (connecte() && resource.data.candidatId == request.auth.uid) || estAdmin();
+    }
+
+    // ---------------------------------------------------------------- analyses IA des CV (module Insight)
+    // Écrites uniquement par les Cloud Functions ; lues par le recruteur destinataire et les admins.
+    match /analyses/{id} {
+      allow read: if (connecte() && resource.data.recruteurId == request.auth.uid) || estAdmin();
+      allow write: if false;
     }
 
     // ---------------------------------------------------------------- back office

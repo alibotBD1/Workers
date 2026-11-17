@@ -60,6 +60,7 @@ function Confidentialite() {
       <ul className="mb-4 list-disc space-y-2 pl-6 text-encre/80">
         <li>Créer et gérer votre compte, publier des offres, transmettre vos candidatures aux recruteurs choisis — <em>exécution du service que vous demandez</em>.</li>
         <li>Calculer votre compatibilité avec les offres et vous recommander des offres — <em>exécution du service</em>.</li>
+        <li>Pour les recruteurs ayant activé le module Insight : analyser automatiquement le CV joint à votre candidature (score d'adéquation, résumé, compétences présentes ou manquantes) afin d'aider le recruteur à trier les candidatures — <em>intérêt légitime du recruteur et de {CONFIG.nom}</em>. L'analyse porte uniquement sur des critères professionnels ; l'âge, le sexe, la photo, l'origine, la religion ou la situation familiale sont exclus. Elle ne prend aucune décision : le recruteur examine chaque candidature. Vous pouvez demander à connaître le résultat de l'analyse vous concernant, présenter vos observations ou vous y opposer en écrivant à {CONFIG.contact}.</li>
         <li>Mesurer l'audience et la provenance des utilisateurs pour améliorer le service — <em>votre consentement</em> (bandeau de statistiques).</li>
         <li>Vous envoyer des offres et actualités de {CONFIG.nom} et du groupe {CONFIG.groupe} par e-mail, SMS ou WhatsApp, adaptées à votre profil — <em>votre consentement</em>, que vous pouvez retirer à tout moment dans « Mes données ».</li>
         <li>Sécuriser la plateforme, lutter contre la fraude et les fausses offres, tenir un journal des actions d'administration — <em>intérêt légitime</em>.</li>
@@ -68,15 +69,15 @@ function Confidentialite() {
 
       <H>Destinataires</H>
       <p>Votre CV et votre candidature ne sont transmis qu'au recruteur de l'offre à laquelle vous postulez. Les administrateurs habilités de {CONFIG.nom} peuvent accéder aux comptes pour l'assistance et la modération ; chaque accès sensible est enregistré. Nous ne vendons pas vos données.</p>
-      <p>Sous-traitants techniques : Google (Firebase : authentification, base de données, stockage, statistiques), GitHub (hébergement du site), Anthropic (analyse par IA des offres d'emploi publiques collectées ; aucune donnée d'utilisateur ne lui est transmise).</p>
+      <p>Sous-traitants techniques : Google (Firebase : authentification, base de données, stockage, statistiques), GitHub (hébergement du site), Anthropic (Anthropic PBC, États-Unis : reformulation des offres d'emploi publiques collectées et, pour les recruteurs ayant activé Insight, analyse du CV joint à une candidature ; Anthropic agit comme sous-traitant et n'utilise pas ces données pour entraîner ses modèles selon ses conditions commerciales — à vérifier dans le contrat souscrit).</p>
 
       <H>Lieu de stockage et transferts</H>
-      <p>Les données sont stockées par Google Cloud dans la région [africa-south1, Johannesburg — à confirmer]. Ce stockage hors du Cameroun constitue un transfert soumis à l'autorisation de l'Autorité de protection des données à caractère personnel ; {CONFIG.nom} s'engage à accomplir ces formalités avant la mise en production.</p>
+      <p>Les données sont stockées par Google Cloud dans la région [africa-south1, Johannesburg — à confirmer]. Ce stockage hors du Cameroun constitue un transfert soumis à l'autorisation de l'Autorité de protection des données à caractère personnel ; {CONFIG.nom} s'engage à accomplir ces formalités avant la mise en production. L'analyse des CV par le module Insight implique en outre un transfert vers les États-Unis (Anthropic), soumis à la même autorisation.</p>
 
       <H>Durées de conservation</H>
       <ul className="mb-4 list-disc space-y-2 pl-6 text-encre/80">
         <li>Compte et CV : tant que le compte est actif, puis suppression après 24 mois sans connexion.</li>
-        <li>Candidatures : 24 mois après leur envoi.</li>
+        <li>Candidatures et analyses IA des CV : 24 mois après l'envoi de la candidature.</li>
         <li>Consentement marketing : jusqu'à son retrait, ou 3 ans sans activité.</li>
         <li>Données de facturation : durée imposée par la loi fiscale.</li>
         <li>Journal d'audit : 12 mois.</li>

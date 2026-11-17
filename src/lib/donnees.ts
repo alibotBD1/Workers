@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -13,7 +14,7 @@ import {
   where,
   type DocumentData,
 } from "firebase/firestore";
-import { db, obtenirStockage, suivreEvenement } from "./firebase";
+import { db, obtenirFonctions, obtenirStockage, suivreEvenement } from "./firebase";
 import type { Offre } from "@/data/types";
 import type { Utilisateur } from "./auth";
 import { slugify } from "./format";
@@ -77,6 +78,7 @@ export async function candidater(offre: Offre, profil: Utilisateur, message: str
     message: message.slice(0, 3000),
     cvUrl: profil.cvUrl ?? null,
     cvNom: profil.cvNom ?? null,
+    cvChemin: profil.cvChemin ?? null,
     statut: "Envoyée",
     creeLe: new Date().toISOString(),
     horodatage: serverTimestamp(),
@@ -125,3 +127,43 @@ export async function soumettreOffre(recruteurId: string, b: BrouillonOffre, ori
 }
 
 export const cloturerOffre = (id: string) => updateDoc(doc(db!, "offres", id), { statut: "expiree", majLe: new Date().toISOString() });
+
+// ------------------------------------------------------------- module Insight (analyse IA des CV)
+
+export interface AnalyseCv {
+  candidatureId: string;
+  statut: "ok" | "erreur";
+  erreur?: string;
+  score: number;
+  recommandation: "À rencontrer" | "À étudier" | "Peu adapté";
+  resume: string;
+  experienceAnnees: number | null;
+  diplome: string | null;
+  competencesTrouvees: string[];
+  competencesManquantes: string[];
+  pointsForts: string[];
+  pointsVigilance: string[];
+  questionsEntretien: string[];
+  langues: string[];
+  cvLisible: boolean;
+  analyseeLe: string;
+  modele?: string;
+}
+
+/** Abonnement temps réel aux analyses des candidatures reçues par un recruteur. */
+export function suivreAnalyses(recruteurId: string, rappel: (parCandidature: Record<string, AnalyseCv>) => void) {
+  return onSnapshot(
+    query(collection(db!, "analyses"), where("recruteurId", "==", recruteurId), orderBy("analyseeLe", "desc"), limit(1000)),
+    (snap) => {
+      const m: Record<string, AnalyseCv> = {};
+      snap.docs.forEach((d) => (m[d.id] = d.data() as AnalyseCv));
+      rappel(m);
+    },
+    () => rappel({}),
+  );
+}
+
+export async function relancerAnalyse(candidatureId: string) {
+  const { httpsCallable } = await import("firebase/functions");
+  await httpsCallable(await obtenirFonctions(), "relancerAnalyse")({ candidatureId });
+}

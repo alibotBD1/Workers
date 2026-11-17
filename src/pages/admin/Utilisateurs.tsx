@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Download, LogIn, Search, ShieldOff, ShieldCheck, X } from "lucide-react";
-import { changerStatutUtilisateur, exporterCsv, journaliser, listerUtilisateurs, seConnecterEnTantQue } from "@/lib/admin";
+import { changerInsight, changerStatutUtilisateur, exporterCsv, journaliser, listerUtilisateurs, seConnecterEnTantQue } from "@/lib/admin";
 import type { Utilisateur } from "@/lib/auth";
 import { messageErreur } from "@/lib/firebase";
 import { secteurNom, VILLES } from "@/data/taxonomie";
@@ -79,7 +79,7 @@ export default function Utilisateurs() {
                 <td className="p-4"><span className={`rounded-md px-2 py-0.5 text-xs font-bold ${u.role === "recruteur" ? "bg-soleil-100 text-soleil-800" : "bg-foret-100 text-foret-800"}`}>{u.role}</span></td>
                 <td className="p-4 text-encre/70">{u.email}<br />{u.telephone}</td>
                 <td className="p-4">{u.ville}</td>
-                <td className="p-4 text-encre/70">{u.role === "recruteur" ? u.entreprise : u.metier}</td>
+                <td className="p-4 text-encre/70">{u.role === "recruteur" ? u.entreprise : u.metier}{u.insight && <span className="ml-2 rounded-md bg-violet-100 px-1.5 py-0.5 text-[11px] font-bold text-violet-800">Insight</span>}</td>
                 <td className="p-4">{u.consentements?.marketing ? "✓" : "—"}</td>
                 <td className="p-4 text-encre/60">{date(u.creeLe)}</td>
                 <td className="p-4">{u.statut === "suspendu" ? <span className="font-semibold text-terre-600">Suspendu</span> : "Actif"}</td>
@@ -127,6 +127,12 @@ function Fiche({ u, fermer, maj }: { u: Utilisateur; fermer: () => void; maj: (u
           {ligne("Provenance", [u.origine?.utm_source, u.origine?.utm_campaign, u.origine?.referent].filter(Boolean).join(" · "))}
         </div>
         {u.cvUrl && <a href={u.cvUrl} target="_blank" rel="noopener noreferrer" onClick={() => journaliser("CV consulté", u.email)} className="btn-contour mt-4 w-full">Voir le CV</a>}
+        {u.role === "recruteur" && (
+          <label className="mt-4 flex items-start gap-3 rounded-2xl bg-white p-4 text-sm ring-1 ring-encre/10">
+            <input type="checkbox" className="mt-0.5 h-5 w-5 accent-violet-700" checked={Boolean(u.insight)} onChange={async (e) => { await changerInsight(u, e.target.checked); maj({ ...u, insight: e.target.checked }); }} />
+            <span><strong>Module Insight</strong> — analyse IA automatique des CV reçus par ce recruteur (formule Entreprise ou pilote).</span>
+          </label>
+        )}
         <div className="mt-6 grid gap-2">
           <button onClick={logAs} className="btn-primaire"><LogIn className="h-4 w-4" /> Se connecter en tant que</button>
           <button onClick={statut} className="btn-contour">{u.statut === "suspendu" ? <><ShieldCheck className="h-4 w-4" /> Réactiver le compte</> : <><ShieldOff className="h-4 w-4" /> Suspendre le compte</>}</button>

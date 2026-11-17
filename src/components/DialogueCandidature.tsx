@@ -135,7 +135,7 @@ export default function DialogueCandidature({ offre, ouverte, fermer }: { offre:
           {externe
             ? `Cette offre a été repérée sur ${offre.source?.nom ?? "le site du recruteur"}. Vous allez être redirigé·e vers sa page de candidature.`
             : offre.recruteurId
-              ? "Votre profil, votre message et votre CV seront transmis uniquement à ce recruteur."
+              ? "Votre profil, votre message et votre CV seront transmis uniquement à ce recruteur. Il peut s'aider d'une analyse automatique de votre CV (critères professionnels uniquement) ; la décision reste humaine."
               : "Votre messagerie s'ouvrira avec un message pré-rempli contenant le lien vers votre CV."}
         </p>
         {erreur && <p role="alert" className="rounded-xl border border-terre-200 bg-terre-50 px-4 py-3 text-sm text-terre-800">{erreur}</p>}

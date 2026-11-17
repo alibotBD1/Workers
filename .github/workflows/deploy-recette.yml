@@ -23,7 +23,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node --test scripts/collecte/outils.test.mjs
+      - run: node --test scripts/collecte/outils.test.mjs functions/insight.test.js
       - name: Build (recette)
         run: npm run build
         env:

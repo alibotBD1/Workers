@@ -42,6 +42,7 @@ export interface Utilisateur {
   fonction?: string;
   secteurEntreprise?: string;
   tailleEntreprise?: string;
+  insight?: boolean; // module d'analyse IA des CV, activé par un admin
   // Commun
   consentements: { cgu: string; marketing: boolean; majLe: string };
   statut: "actif" | "suspendu";

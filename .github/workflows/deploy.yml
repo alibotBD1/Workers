@@ -27,7 +27,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Tests du robot de collecte
-        run: node --test scripts/collecte/outils.test.mjs
+        run: node --test scripts/collecte/outils.test.mjs functions/insight.test.js
       - name: Build
         run: npm run build
         env:

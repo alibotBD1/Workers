@@ -86,6 +86,11 @@ export async function listerUtilisateurs(filtres: { role?: string; ville?: strin
   return lignes<Utilisateur & { id: string }>(await getDocs(query(col("utilisateurs"), ...c))).map((u) => ({ ...u, uid: u.id }));
 }
 
+export async function changerInsight(u: Utilisateur, actif: boolean) {
+  await updateDoc(doc(db!, "utilisateurs", u.uid), { insight: actif });
+  await journaliser(actif ? "Module Insight activé" : "Module Insight désactivé", u.entreprise ?? u.email);
+}
+
 export async function changerStatutUtilisateur(u: Utilisateur, statut: "actif" | "suspendu") {
   await updateDoc(doc(db!, "utilisateurs", u.uid), { statut });
   await journaliser(statut === "suspendu" ? "Compte suspendu" : "Compte réactivé", u.email);

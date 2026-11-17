@@ -1,6 +1,6 @@
 # Workers · par Melanyne
 
-> Groupe **Melanyne** — version 1.1.0
+> Groupe **Melanyne** — version 1.2.0
 
 **Le job board camerounais.** Offres d'emploi à Douala, Yaoundé et dans les 10 régions : CDI, CDD, stages, alternance, freelance.
 
@@ -99,6 +99,14 @@ Créez la branche `recette` : chaque push la déploie sur `https://workers-recet
 Dans le back office, **Collecte IA → Ajouter une source** : page carrières d'un employeur ou flux RSS public. Cochez « conditions vérifiées » seulement si le site autorise la réutilisation de ses offres. Le robot passe toutes les 6 heures (ou via *Actions → Collecte IA → Run workflow*), respecte robots.txt, reformule chaque annonce avec Claude et renvoie vers l'annonce d'origine. Les offres arrivent dans **Offres → À valider**.
 
 Test local sans base : `SOURCES_FICHIER=sources.json DRY_RUN=1 ANTHROPIC_API_KEY=… npm run collecte`.
+
+### Module Insight (analyse IA des CV)
+
+1. Déployez les fonctions : *Actions → Firebase production → Run workflow*, case « Cloud Functions » cochée. La clé `ANTHROPIC_API_KEY` de l'environnement GitHub est copiée dans Secret Manager.
+2. Dans le back office, ouvrez la fiche d'un recruteur et cochez **Module Insight**.
+3. Chaque nouvelle candidature avec CV adressée à ce recruteur est analysée automatiquement (fonction `analyserNouvelleCandidature`, région de la base). Le recruteur voit le score, le résumé et les compétences dans « Candidatures reçues », et peut relancer une analyse.
+
+Réglages (variables d'environnement des fonctions) : `INSIGHT_MODELE` (défaut `claude-sonnet-5-5`), `INSIGHT_LIMITE_JOUR` (défaut 300 analyses par recruteur et par jour).
 
 ### Données personnelles
 

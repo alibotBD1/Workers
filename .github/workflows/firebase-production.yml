@@ -30,13 +30,22 @@ jobs:
       - name: Dépendances des fonctions
         if: ${{ inputs.fonctions }}
         run: npm install --prefix functions
+      - name: Tests des fonctions
+        if: ${{ inputs.fonctions }}
+        run: node --test functions/insight.test.js
       - name: Déployer
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AVEC_FONCTIONS: ${{ inputs.fonctions && '1' || '0' }}
           CIBLE: ${{ inputs.cible || 'production' }}
           PARTIES: ${{ inputs.fonctions && 'firestore,storage,functions' || 'firestore,storage' }}
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/cle.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/cle.json"
+          # Clé Claude du module Insight, copiée dans Secret Manager avant le déploiement des fonctions
+          if [ "$AVEC_FONCTIONS" = "1" ] && [ -n "$ANTHROPIC_API_KEY" ]; then
+            printf '%s' "$ANTHROPIC_API_KEY" | npx --yes firebase-tools@latest functions:secrets:set ANTHROPIC_API_KEY --data-file=- --project "$CIBLE" --non-interactive --force
+          fi
           npx --yes firebase-tools@latest deploy --only "$PARTIES" --project "$CIBLE" --non-interactive
           rm -f "$RUNNER_TEMP/cle.json"
